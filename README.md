@@ -2,6 +2,8 @@
 
 The Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform is based on the Network Simulation 2. It is able to simulate a variety of experimental scenarios related to Distributed Denial-of-Service (DDoS) attacks and Active Queue Management (AQM) algorithms.
 
+[**Download**](leodos.zip?raw=true) | [**Introduction**](leodos/doc/leodos.pdf?raw=true) | [**Discussion**](http://groups.google.com/group/aqmdos-simulation-platform) | [**FAQs**](https://sites.google.com/site/cwzhangres/home/posts/frequentlyaskedquestionsfaqsabouttheaqmdossimulationplatform)
+
 ## Can simulate numbers of Denial-of-Service attacks:
 
 * Denial-of-Service (DoS) attacks

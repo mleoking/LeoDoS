@@ -1,0 +1,57 @@
+# Copyright (c) 2010-2012 Changwang Zhang (mleoking@gmail.com). All rights reserved.
+#
+# This Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform was established
+# for the Robust Random Early Detection (RRED) algorithm [1]. If you use any part of this platform
+# in your research, you have the responsibility to cite this platform as:
+#
+# The experiments (or simulations) are conducted on the AQM&DoS Simulation Platform that was created 
+# for the Robust Random Early Detection (RRED) algorithm [1].
+#
+# References:
+# 1. Changwang Zhang, Jianping Yin, Zhiping Cai, and Weifeng Chen, RRED: Robust RED Algorithm to Counter Low-rate Denial-of-Service Attacks, IEEE Communications Letters, vol. 14, pp. 489-491, 2010.
+#
+# Platform Homepage: http://sites.google.com/site/cwzhangres/home/posts/aqmdossimulationplatform
+#
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+# 1. Cite this platform in the redistribution using the way mentioned above.
+# 2. The above statements are kept in the redistribution.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  AQM&DoS Simulation Platform is mainly tested on ns-2.33, but it is expected to be compatible with higher versions of ns.
+  If you are using a different version of ns, please replace "2.33" with the version number of your ns in all the following instructions.
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Note: You must integrate SFB/blue into your NS2 distribution before integrating RSFB.
+If you do not have SFB/blude in your NS2 distribution, please refer to "ns2-blue.tar.gz", which is included in this package, to integrate it.
+
+The Resilient Stochastic Fair Blue (RSFB) can be integrated into the NS2 distributions in these steps:	
+1. Copy the following files into the directory "ns-allinone-2.33\ns-2.33\queue".
+	robustfairblue.h
+	robustfairblue.cc
+	
+2. Add the following lines to the end of ns-default.tcl ("ns-allinone-2.33\ns-2.33\tcl\lib\ns-default.tcl"). 
+	# Added by leoking RobustSFB config 0
+	Queue/SFB/Robust set drop_front_ false
+	Queue/SFB/Robust set bytes 0
+	Queue/SFB/Robust set setbit true ;#ECN support turned on by default
+	Queue/SFB/Robust set decrement 0.001
+	Queue/SFB/Robust set increment 0.005
+	Queue/SFB/Robust set hold-time 100ms
+	Queue/SFB/Robust set algorithm 0
+	Queue/SFB/Robust set pbox-time 50ms
+	Queue/SFB/Robust set pktsize 1000
+	Queue/SFB/Robust set hinterval 20s ;#hash interval switching duration
+
+	Queue/SFB/Robust set pm_benign_th_ 0.4
+	Queue/SFB/Robust set benign_flow_queue_size_ 30
+	# Added by leoking RobustSFB config 1
+
+3. Add the following line to the Makefile ("ns-allinone-2.33\ns-2.33\Makefile") in the "OBJ_CC = " section.
+	queue/robustfairblue.o \
+
+4. Recompile the ns-allinone-2.33 system by using the following commands (you should execute these commands in the ns-2.33 directory "ns-allinone-2.33\ns-2.33"):
+	make clean
+	make depend
+	make
+
+If you have any question with the integration process, please contract mleoking@gmail.com.

@@ -1,0 +1,48 @@
+# Copyright (c) 2010-2012 Changwang Zhang (mleoking@gmail.com). All rights reserved.
+#
+# This Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform was established
+# for the Robust Random Early Detection (RRED) algorithm [1]. If you use any part of this platform
+# in your research, you have the responsibility to cite this platform as:
+#
+# The experiments (or simulations) are conducted on the AQM&DoS Simulation Platform that was created 
+# for the Robust Random Early Detection (RRED) algorithm [1].
+#
+# References:
+# 1. Changwang Zhang, Jianping Yin, Zhiping Cai, and Weifeng Chen, RRED: Robust RED Algorithm to Counter Low-rate Denial-of-Service Attacks, IEEE Communications Letters, vol. 14, pp. 489-491, 2010.
+#
+# Platform Homepage: http://sites.google.com/site/cwzhangres/home/posts/aqmdossimulationplatform
+#
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+# 1. Cite this platform in the redistribution using the way mentioned above.
+# 2. The above statements are kept in the redistribution.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  AQM&DoS Simulation Platform is mainly tested on ns-2.33, but it is expected to be compatible with higher versions of ns.
+  If you are using a different version of ns, please replace "2.33" with the version number of your ns in all the following instructions.
+-----------------------------------------------------------------------------------------------------------------------------------
+
+The Robust Random Early Detection (RRED) algorithm can be integrated into the NS2 distributions in these steps:	
+1. Copy the following files into the directory "ns-allinone-2.33\ns-2.33\queue".
+	red-robust.h
+	red-robust.cc
+	
+2. Add the following lines to the end of ns-default.tcl ("ns-allinone-2.33\ns-2.33\tcl\lib\ns-default.tcl"). 
+	# Added by leoking RobustRed config 0
+	Queue/RED/Robust set hash_bins_ 23
+	Queue/RED/Robust set hash_levels_ 2
+	Queue/RED/Robust set score_max_ 10
+	Queue/RED/Robust set score_min_ -1
+	Queue/RED/Robust set score_pass_ 0
+	Queue/RED/Robust set last_drop_time_ 0ms
+	Queue/RED/Robust set drop_related_period_ 10ms
+	# Added by leoking RobustRed config 1
+
+3. Insert the following line of code before "$(OBJ_STL)" in the Makefile ("ns-allinone-2.33\ns-2.33\Makefile"):
+	queue/red-robust.o \
+
+4. Recompile the ns-allinone-2.33 system by using the following commands (you should execute these commands in the ns-2.33 directory "ns-allinone-2.33\ns-2.33"):
+	make clean
+	make depend
+	make
+
+If you have any question with the integration process, please contract mleoking@gmail.com.

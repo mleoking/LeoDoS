@@ -1,0 +1,212 @@
+By
+
+Sunil Thulasidasan
+RADIANT Group <http://www.lanl.gov/radiant/>
+Los Alamos National Laboratory
+sunil@Lanl.gov
+
+Contents of this file
+---------------------
+0.) Change Log
+1.) BLUE, Stochastic Fair BLUE (SFB) brief
+2.) NS Version Details
+3.) Details of changes to NS
+4.) Setup instructions
+5.) Integrating into NS distribution
+6.) NS documentation for BLUE, SFB and guidelines
+
+
+0. Change Log
+   ----------
+Changes to earlier implementation
+
+	(i)   ECN support added for BLUE
+	(ii)  ECN support added for Stochastic Fair Blue (SFB)
+	(iii) ip.h (packet header) extended to add marker for identifying rogue flows.
+	(iii) A very minor bug in the dequeue function in SFB has been corrected.
+	     
+
+
+1. BLUE, Stochastic Fair BLUE brief
+   --------------------------------
+BLUE is a  congestion avoidance algorithm , developed by W. Feng et al,  that uses packet loss and link utilisation behaviour
+for active queue management. The paper on BLUE can be found at http://www.eecs.umich.edu/~wuchang/work/CSE-TR-387-99.pdf
+
+Stochastic Fair BLUE (SFB), also by Feng et al, is an extension of BLUE, which uses Bloom filters to enforce fairness among
+flows. The paper on SFB can be found at http://www.thefengs.com/wuchang/blue/41_2.PDF
+
+
+2.) Version Details
+    ---------------
+BLUE and Stochastic Fair BlUE , originally implemeneted for ns-1.1 by Feng, has been ported to  the most recent 
+release of NS - ns2.1b8 (as of 11/2001).
+The C++/TCL code and documentation can be found at http://home.lanl.gov/sunil/ns/ns-blue.tar.gz
+
+
+3.) Details of changes to NS
+    ------------------------
+
+The following files have been *added* to the C++ directory
+<blue.h,blue.cc> for BLUE
+<fairblue.h,fairblue.cc> for SFB
+
+The following file has been modiefied in the C++ directory (common directory
+in the latest ns distribution)
+<ip.h>
+
+The following files have been modified in the tcl/lib directory
+ns-default.tcl 
+ns-lib.tcl
+(Refer section 5 on the oTcl changes)
+
+
+4.) Setup instructions
+    ------------------
+  a.)  Copy the following files into the c++ directory
+ 	blue.h
+	blue.cc
+	fairblue.h
+	fairblue.cc
+	ip.h
+
+  b.)  Copy the fillowing files into the tcl/lib directory
+	ns-default.tcl
+	ns-lib.tcl
+   (If you do not wish to over write your current ns tcl files, refer section 5.)
+
+
+  c.)  Copy the following files into your test directory
+        test-blue.tcl
+        test-sfb.tcl 	
+	
+  d.)  Add the following line to the Makefile in the "OBJ_CC = " section
+	blue.o fairblue.o
+	
+  e.)  For compiling, type "make" at the command prompt. If dependency 
+       errors show up (unlikely), try the following
+
+	make clean
+	make depend
+	make  	
+
+
+5.) Integrating into the NS distribution
+    ------------------------------------
+    The BLUE and SFB code can be integrated into the distributions fairly easily.	
+    Copy the following files into the c++ directory
+ 	blue.h
+	blue.cc
+	fairblue.h
+	fairblue.cc
+	
+	Add the following lines in ip.h (inside the struct hdr_ip declaration)
+	    int             pmark_; //Marker for unresponsive flows - used
+	    		    	    //by Fairness algos like Fair Blue
+	
+	Add the following lines in ip.h where the member access functions are defined
+	     int& pmark() { return (pmark_);
+
+
+	Add the following lines to ns-default.tcl
+		 
+		Queue/Blue set drop_front_ false
+		Queue/Blue set bytes 0
+		Queue/Blue set setbit true ;#ECN support turned on by default
+		Queue/Blue set decrement 0.00025
+		Queue/Blue set increment 0.0025
+		Queue/Blue set dhold-time 100ms
+		Queue/Blue set ihold-time 100ms
+		Queue/Blue set dalgorithm 0
+		Queue/Blue set ialgorithm 0
+		Queue/Blue set pmark 1
+		Queue/Blue set pktsize 1000 
+
+
+		#For SFB (Stochastic Fair Blue)
+		Queue/SFB set drop_front_ false
+		Queue/SFB set bytes 0
+		Queue/SFB set setbit true ;#ECN support turned on by default
+		Queue/SFB set decrement 0.001
+		Queue/SFB set increment 0.005
+		Queue/SFB set hold-time 100ms
+		Queue/SFB set algorithm 0
+		Queue/SFB set pbox-time 50ms
+		Queue/SFB set pktsize 1000
+		Queue/SFB set hinterval 20s ;#hash interval switching duration
+
+	
+	Add the following lines into ns-lib.tcl in the simple-link{} procedure (look for Simulator instproc simple-link{...} )
+
+	#For Blue 
+	if {$qtype == "Blue"} {	
+		$q link [$link_($sid:$did) set link_]
+	}
+
+	#For SFB 
+	if {$qtype == "SFB"} {
+	 	$q link [$link_($sid:$did) set link_]
+	}
+
+
+	Add changes to makefile (refer section 4)
+
+	Copy test-blue.tcl, test-sfb.tcl (these are the test scripts) into tcl/test
+
+
+6.) NS documentation
+    ----------------
+  
+    BLUE objects are a subclass of Queue objects that implement the BLUE queueing algorithm. This queue object uses a single
+    FIFO queue to enqueue and dequeue packets. There are no methods that are specific to BLUE. Configuration parameters are :
+
+	drop_front_  /*boolean, indicates whether to drop tail or drop front on queue overflow. Set to 'false' by default. */                    
+        setbit       /*values are true (default) or false, indicates whether to mark ECN bit*/
+        decrement    /*marking/dropping probability (pm) decrement value*/
+        increment    /*pm increment value*/
+        dhold-time   /*time interval during which pm cannot be decreased*/
+	ihold-time   /*time interval during which pm cannot be increased*/
+
+	/*the hold-times are to give enough time for the previous changes to pm
+	/*to take effect*/
+  
+        pmark 	     /*inital value for pm*/
+        pktsize      /*packet size*/ 		 
+    		
+
+    SFB objects are a subclass of Queue objects that implement the SFB algorithm. The Queue object uses a single FIFO queue 
+    to enqueue and dequeue packets, while a bloom filter is used for accounting flow statistics. There are no methods that are
+    specific to SFB. Configuration parameters are 		
+
+	drop_front_  /*boolean, indicates whether to drop tail or drop front on queue overflow. Set to 'false' by default. */
+	setbit       /*values are true (default) or false, indicates whether to mark ECN bit*/	
+        decrement    /*marking/dropping  probability (pm) decrement value*/
+        increment    /*pm increment value*/
+        hold-time    /*time interval for which pm cannot be changed*/
+        pbox-time    /*time interval during which packets from unresponsive flows cannot be queued*/
+        pktsize     /*packet size*/
+        hinterval   /*hash function perturbation time interval*/
+
+
+	Guidelines for setting SFB Parameters
+	-------------------------------------
+	pbox-time : This determines the bandwidth allocated to rogue flows
+	(rate limiting bandwidth). Preconfigured value is 0.16Mbps. For a
+	different b/w, change this value in either
+	ns-default.tcl or your your test script.(see test-sfb.tcl on how to do this)
+	
+	hinterval : This is the hash interval perturbation interval. Try not
+	to set this to too low (i.e, much less than the time taken to drain the
+	queue), or too high a value. Should be set to some multiple of
+	queue-draining-time.
+
+
+/*DISCLAIMER*/
+--------------
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+FOR A PARTICULAR PURPOSE.
+
+
+Please report comments, bugs or ommissions to :  sunil@lanl.gov
+
+

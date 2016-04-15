@@ -1,0 +1,57 @@
+# Copyright (c) 2010-2012 Changwang Zhang (mleoking@gmail.com). All rights reserved.
+#
+# This Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform was established
+# for the Robust Random Early Detection (RRED) algorithm [1]. If you use any part of this platform
+# in your research, you have the responsibility to cite this platform as:
+#
+# The experiments (or simulations) are conducted on the AQM&DoS Simulation Platform that was created 
+# for the Robust Random Early Detection (RRED) algorithm [1].
+#
+# References:
+# 1. Changwang Zhang, Jianping Yin, Zhiping Cai, and Weifeng Chen, RRED: Robust RED Algorithm to Counter Low-rate Denial-of-Service Attacks, IEEE Communications Letters, vol. 14, pp. 489-491, 2010.
+#
+# Platform Homepage: http://sites.google.com/site/cwzhangres/home/posts/aqmdossimulationplatform
+#
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+# 1. Cite this platform in the redistribution using the way mentioned above.
+# 2. The above statements are kept in the redistribution.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  AQM&DoS Simulation Platform is mainly tested on ns-2.33, but it is expected to be compatible with higher versions of ns.
+  If you are using a different version of ns, please replace "2.33" with the version number of your ns in all the following instructions.
+-----------------------------------------------------------------------------------------------------------------------------------
+
+The ip spoofing function can be integrated into the NS2 distributions in these steps:	
+1. Copy the following files into the directory "ns-allinone-2.33\ns-2.33\common".
+	agent-leo.h
+	
+2. Modify agent.h ("ns-allinone-2.33\ns-2.33\common\agent.h")
+	2.1. Insert the following line of code in a new line before "class Application;":
+		#include "agent-leo.h" //Added by leoking
+	2.2. Insert the following line of code in a new line directly after "public:":
+		agent_class_public_begin();//Added by leoking
+
+3. Modify agent.cc ("ns-allinone-2.33\ns-2.33\common\agent.cc")	
+	3.1. Insert the following line of code into the function body of "Agent::Agent(packet_t pkttype)":
+		agent_construction_end();//Added by leoking
+	3.2. Insert the following line of code into the end of the function body of "Agent::initpkt(Packet* p)":
+		agent_initpkt_end(p); //Added by leoking
+
+4. Add the following lines to the end of ns-default.tcl ("ns-allinone-2.33\ns-2.33\tcl\lib\ns-default.tcl"): 
+	# Added by leoking spoof config 0 
+	Agent set saddr_min_ 1
+	Agent set saddr_max_ 100
+	Agent set spoof_level_ 0
+	# Added by leoking spoof config 1
+
+5. Recompile the ns-allinone-2.33 system by using the following commands (you should execute these commands in the ns-2.33 directory "ns-allinone-2.33\ns-2.33"):
+	make clean
+	make depend
+	make
+	
+Notes:
+	The modified agent.h and agent.cc are also included in this directory. 
+	If you do not want to manually finish step 2 and 3, you can use the files (agent.h and agent.cc) provided in this directory to overwrite their corresponding files in the NS2 distribution (Note: This might only work for ns-2.33/ns-2.32. For other versions of ns, please follow steps 2 and 3).
+	But you still need to finished step 1, 4 and 5.
+
+If you have any question with the integration process, please contract mleoking@gmail.com.

@@ -4,7 +4,7 @@ The Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform 
 
 [**Download**](leodos.zip?raw=true) | [**Introduction**](leodos/doc/leodos.pdf?raw=true) | [**Discussion**](http://groups.google.com/group/aqmdos-simulation-platform) | [**FAQs**](https://sites.google.com/site/cwzhangres/home/posts/frequentlyaskedquestionsfaqsabouttheaqmdossimulationplatform)
 
-## LeoDoS simulates numbers of Denial-of-Service attacks:
+## Simulate numbers of Denial-of-Service attacks:
 
 * Denial-of-Service (DoS) attacks
 * Distributed Deinal-of-Service (DDoS) attacks
@@ -12,14 +12,14 @@ The Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform 
 * Distributed Low-rate Denial-of-Service (DLDoS) attacks
 * Spoofing LDoS or DLDoS attacks
 
-## LeoDoS simulates many Active Queue Management (AQM) algorithms:
+## Support many Active Queue Management (AQM) algorithms:
 
 * 1 DropTail; 2 RED; 3 RED/PD; 4 Blue; 5 SFB;
 * 6 CBQ; 7 FQ; 8 SFQ; 9 DRR; 10 PI;
 * 11 Vq; 12 REM; 13 GK; 14 SRR;
 * 15 RED/Robust (RRED) 16 SFB/Robust (RSFB);
 
-## LeoDoS simulates a number of network topologies:
+## Simulate a number of network topologies:
 
 * Dumb Bell
 * Tree

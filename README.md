@@ -12,7 +12,7 @@ The Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform 
 * Distributed Low-rate Denial-of-Service (DLDoS) attacks
 * Spoofing LDoS or DLDoS attacks
 
-## Support many Active Queue Management (AQM) algorithms:
+## Simulate many Active Queue Management (AQM) algorithms:
 
 * 1 DropTail; 2 RED; 3 RED/PD; 4 Blue; 5 SFB;
 * 6 CBQ; 7 FQ; 8 SFQ; 9 DRR; 10 PI;

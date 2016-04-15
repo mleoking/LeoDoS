@@ -70,7 +70,7 @@ References:
 1. Changwang Zhang, Jianping Yin, Zhiping Cai, and Weifeng Chen, RRED: Robust RED Algorithm to Counter Low-rate Denial-of-Service Attacks, IEEE Communications Letters, vol. 14, pp. 489-491, 2010.
 
 Notes: 
-	If you have any problem in doing these experiments, please contract us. mleoking@gmail.com
+	If you have any problem in doing these experiments, please contract us. aqmdos-simulation-platform@googlegroups.com
 
 
 

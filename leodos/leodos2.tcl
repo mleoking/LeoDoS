@@ -680,7 +680,7 @@ proc finish {} {
 set ns [new Simulator]
 
 #usage
-puts "leodos.mbn2.tcl"
+puts "leodos2.tcl"
 getPam $argc $argv
 printPam
 

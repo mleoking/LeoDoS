@@ -17,7 +17,7 @@ The Active Queue Management and Denial-of-Service (AQM&DoS) Simulation Platform 
 * 11 Vq; 12 REM; 13 GK; 14 SRR;
 * 15 RED/Robust (RRED) 16 SFB/Robust (RSFB);
 
-## Support a number of topologies:
+## Support a number of network topologies:
 
 * Dumb Bell
 * Tree
